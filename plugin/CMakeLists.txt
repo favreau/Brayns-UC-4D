@@ -28,7 +28,7 @@ set(${NAME}_PUBLIC_HEADERS
 
 # Dependencies
 set(${NAME}_LINK_LIBRARIES
-  braynsPluginAPI vmmlib)
+  braynsPluginAPI)
 
 # Library
 include_directories(${BRAYNS_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR})

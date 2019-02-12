@@ -85,7 +85,7 @@ void Basic4DPlugin::init()
     scene.addModel(modelDescriptor);
 
     auto& ap = _api->getParametersManager().getAnimationParameters();
-    ap.setEnd(360);
+    ap.setNumFrames(360);
     ap.setDt(1);
     ap.setUnit("degrees");
 }
@@ -122,21 +122,21 @@ brayns::Vector3f Basic4DPlugin::_computeCoordinates(const brayns::Vector3f& p1,
                                                     const brayns::Vector3f& p4)
 {
     if (_angle >= 0.f && _angle < 0.25f)
-        return {p4.x() + (p1.x() - p4.x()) * _angle * 4.f,
-                p4.y() + (p1.y() - p4.y()) * _angle * 4.f,
-                p4.z() + (p1.z() - p4.z()) * _angle * 4.f};
+        return {p4.x + (p1.x - p4.x) * _angle * 4.f,
+                p4.y + (p1.y - p4.y) * _angle * 4.f,
+                p4.z + (p1.z - p4.z) * _angle * 4.f};
     if (_angle >= 0.25f && _angle < 0.5f)
-        return {p1.x() + (p2.x() - p1.x()) * (_angle - 0.25f) * 4.f,
-                p1.y() + (p2.y() - p1.y()) * (_angle - 0.25f) * 4.f,
-                p1.z() + (p2.z() - p1.z()) * (_angle - 0.25f) * 4.f};
+        return {p1.x + (p2.x - p1.x) * (_angle - 0.25f) * 4.f,
+                p1.y + (p2.y - p1.y) * (_angle - 0.25f) * 4.f,
+                p1.z + (p2.z - p1.z) * (_angle - 0.25f) * 4.f};
     if (_angle >= 0.5f && _angle < 0.75f)
-        return {p2.x() + (p3.x() - p2.x()) * (_angle - 0.5f) * 4.f,
-                p2.y() + (p3.y() - p2.y()) * (_angle - 0.5f) * 4.f,
-                p2.z() + (p3.z() - p2.z()) * (_angle - 0.5f) * 4.f};
+        return {p2.x + (p3.x - p2.x) * (_angle - 0.5f) * 4.f,
+                p2.y + (p3.y - p2.y) * (_angle - 0.5f) * 4.f,
+                p2.z + (p3.z - p2.z) * (_angle - 0.5f) * 4.f};
     if (_angle >= 0.75f && _angle < 1.f)
-        return {p3.x() + (p4.x() - p3.x()) * (_angle - 0.75f) * 4.f,
-                p3.y() + (p4.y() - p3.y()) * (_angle - 0.75f) * 4.f,
-                p3.z() + (p4.z() - p3.z()) * (_angle - 0.75f) * 4.f};
+        return {p3.x + (p4.x - p3.x) * (_angle - 0.75f) * 4.f,
+                p3.y + (p4.y - p3.y) * (_angle - 0.75f) * 4.f,
+                p3.z + (p4.z - p3.z) * (_angle - 0.75f) * 4.f};
 }
 
 void Basic4DPlugin::_createGeometry()
@@ -188,7 +188,7 @@ void Basic4DPlugin::_createGeometry()
     for (size_t i = 0; i < 16; ++i)
     {
         const auto& t = vertices[i];
-        _model->addSphere(VERTEX_MATERIAL_ID, {{t.x(), t.y(), t.z()}, radius});
+        _model->addSphere(VERTEX_MATERIAL_ID, {{t.x, t.y, t.z}, radius});
     }
 
     const size_t joints[32][2] = {
@@ -205,9 +205,8 @@ void Basic4DPlugin::_createGeometry()
         const auto& t = vertices[joints[i][0]];
         const auto& u = vertices[joints[i][1]];
 
-        _model->addCylinder(EDGE_MATERIAL_ID, {{t.x(), t.y(), t.z()},
-                                               {u.x(), u.y(), u.z()},
-                                               radius});
+        _model->addCylinder(EDGE_MATERIAL_ID,
+                            {{t.x, t.y, t.z}, {u.x, u.y, u.z}, radius});
     }
 
     auto& meshes = _model->getTrianglesMeshes()[FACE_MATERIAL_ID];
